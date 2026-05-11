@@ -21,16 +21,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 16,
     padding: 24,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#31302E",
   },
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#0f172a",
+    color: "#F0F0F0",
   },
   subtitle: {
     fontSize: 16,
-    color: "#475569",
+    color: "#DAD9D7",
   },
   button: {
     marginTop: 8,
