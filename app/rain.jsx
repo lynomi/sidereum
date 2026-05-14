@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import BackButton from "../components/TopRightBackButton";
+import BackButton from "../components/BackButton";
 
 export default function Rain() {
   return (

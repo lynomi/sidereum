@@ -1,20 +1,21 @@
 import {
-  setAudioModeAsync,
-  useAudioPlayer,
+    setAudioModeAsync,
+    useAudioPlayer,
 } from "expo-audio";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Animated,
-  Keyboard,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
+    Animated,
+    Keyboard,
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
-import BackButton from "../components/TopRightBackButton";
+import BackButton from "../components/BackButton";
 
 const TIMER_MINUTES = {
   min: 1,
@@ -300,6 +301,7 @@ export default function Sleep() {
 
   return (
     <View style={styles.container}>
+      <StatusBar hidden={isScreenDimmed} />
       <BackButton opacity={blackScreenOpacity} />
 
       <Text style={styles.title}>Sleep</Text>
