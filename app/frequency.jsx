@@ -1,18 +1,20 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import TopRightBackButton from "../components/TopRightBackButton";
 
-export default function Noise() {
+export default function Frequency() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Noise</Text>
-      <Text style={styles.subtitle}>Soft background noise for focus and rest.</Text>
+      <TopRightBackButton />
+
+      <Text style={styles.title}>Frequency</Text>
 
       <Pressable style={styles.button} onPress={() => router.push("/sleep")}>
-        <Text style={styles.buttonText}>Go to Sleep</Text>
+        <Text style={styles.buttonText}>432hz</Text>
       </Pressable>
 
-      <Pressable style={styles.secondaryButton} onPress={() => router.back()}>
-        <Text style={styles.secondaryButtonText}>Back to Selection</Text>
+       <Pressable style={styles.button} onPress={() => router.push("/sleep")}>
+        <Text style={styles.buttonText}>528hz</Text>
       </Pressable>
     </View>
   );
@@ -49,17 +51,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#ffffff",
-  },
-  secondaryButton: {
-    borderRadius: 8,
-    borderColor: "#9ca3af",
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#e5e7eb",
   },
 });

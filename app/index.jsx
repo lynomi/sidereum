@@ -21,27 +21,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 16,
     padding: 24,
-    backgroundColor: "#31302E",
+    backgroundColor: "#2c0703",
   },
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#F0F0F0",
+    color: "#ebd4cb",
   },
   subtitle: {
     fontSize: 16,
-    color: "#DAD9D7",
+    color: "#da9f93",
   },
   button: {
     marginTop: 8,
     borderRadius: 8,
-    backgroundColor: "#2563eb",
+    backgroundColor: "#da9f93",
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#ffffff",
+    color: "#ebd4cb",
   },
 });

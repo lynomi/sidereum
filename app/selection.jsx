@@ -13,8 +13,8 @@ export default function Selection() {
         <Pressable style={styles.button} onPress={() => router.push("/fire")}>
           <Text style={styles.buttonText}>Fire</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => router.push("/noise")}>
-          <Text style={styles.buttonText}>Noise</Text>
+        <Pressable style={styles.button} onPress={() => router.push("/frequency")}>
+          <Text style={styles.buttonText}>Frequency</Text>
         </Pressable>
         <Pressable style={styles.button} onPress={() => router.push("/custom")}>
           <Text style={styles.buttonText}>Custom</Text>

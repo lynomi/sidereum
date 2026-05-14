@@ -1,18 +1,17 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import TopRightBackButton from "../components/TopRightBackButton";
 
 export default function Fire() {
   return (
     <View style={styles.container}>
+      <TopRightBackButton />
+
       <Text style={styles.title}>Fire</Text>
       <Text style={styles.subtitle}>Warm crackles for settling down.</Text>
 
       <Pressable style={styles.button} onPress={() => router.push("/sleep")}>
         <Text style={styles.buttonText}>Go to Sleep</Text>
-      </Pressable>
-
-      <Pressable style={styles.secondaryButton} onPress={() => router.back()}>
-        <Text style={styles.secondaryButtonText}>Back to Selection</Text>
       </Pressable>
     </View>
   );
@@ -49,17 +48,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#ffffff",
-  },
-  secondaryButton: {
-    borderRadius: 8,
-    borderColor: "#fdba74",
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#fed7aa",
   },
 });

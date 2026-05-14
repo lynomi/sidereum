@@ -1,18 +1,37 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import TopRightBackButton from "../components/TopRightBackButton";
 
 export default function Rain() {
   return (
     <View style={styles.container}>
+      <TopRightBackButton />
+
       <Text style={styles.title}>Rain</Text>
       <Text style={styles.subtitle}>A steady rainfall soundscape.</Text>
 
       <Pressable style={styles.button} onPress={() => router.push("/sleep")}>
-        <Text style={styles.buttonText}>Go to Sleep</Text>
+        <Text style={styles.buttonText}>Light Rain</Text>
       </Pressable>
 
-      <Pressable style={styles.secondaryButton} onPress={() => router.back()}>
-        <Text style={styles.secondaryButtonText}>Back to Selection</Text>
+      <Pressable style={styles.button} onPress={() => router.push("/sleep")}>
+        <Text style={styles.buttonText}>Heavy Rain</Text>
+      </Pressable>
+
+      <Pressable
+        style={styles.button}
+        onPress={() =>
+          router.push({
+            pathname: "/sleep",
+            params: { sound: "thunderstorm" },
+          })
+        }
+      >
+        <Text style={styles.buttonText}>Thunderstorm</Text>
+      </Pressable>
+
+      <Pressable style={styles.button} onPress={() => router.push("/sleep")}>
+        <Text style={styles.buttonText}>In a car</Text>
       </Pressable>
     </View>
   );
@@ -49,17 +68,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#ffffff",
-  },
-  secondaryButton: {
-    borderRadius: 8,
-    borderColor: "#93c5fd",
-    borderWidth: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  secondaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#bfdbfe",
   },
 });
