@@ -1,8 +1,8 @@
 import { router } from "expo-router";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Animated, Pressable, StyleSheet, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function TopRightBackButton() {
+export default function BackButton({ opacity }) {
   const insets = useSafeAreaInsets();
 
   const goBack = () => {
@@ -14,15 +14,25 @@ export default function TopRightBackButton() {
     router.replace("/selection");
   };
 
+  const invertedOpacity = opacity
+    ? opacity.interpolate({
+        inputRange: [0, 1],
+        outputRange: [1, 0],
+      })
+    : 1;
+
+  const buttonStyle = [styles.button, { top: insets.top + 16, opacity: invertedOpacity }];
+
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel="Go back"
-      style={[styles.button, { top: insets.top + 16 }]}
-      onPress={goBack}
-    >
-      <Text style={styles.buttonText}>Back</Text>
-    </Pressable>
+    <Animated.View style={buttonStyle}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+        onPress={goBack}
+      >
+        <Text style={styles.buttonText}>Back</Text>
+      </Pressable>
+    </Animated.View>
   );
 }
 

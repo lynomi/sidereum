@@ -1,11 +1,11 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import TopRightBackButton from "../components/TopRightBackButton";
+import BackButton from "../components/TopRightBackButton";
 
 export default function Rain() {
   return (
     <View style={styles.container}>
-      <TopRightBackButton />
+      <BackButton />
 
       <Text style={styles.title}>Rain</Text>
       <Text style={styles.subtitle}>A steady rainfall soundscape.</Text>
@@ -28,10 +28,6 @@ export default function Rain() {
         }
       >
         <Text style={styles.buttonText}>Thunderstorm</Text>
-      </Pressable>
-
-      <Pressable style={styles.button} onPress={() => router.push("/sleep")}>
-        <Text style={styles.buttonText}>In a car</Text>
       </Pressable>
     </View>
   );

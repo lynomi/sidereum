@@ -1,11 +1,11 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import TopRightBackButton from "../components/TopRightBackButton";
+import BackButton from "../components/TopRightBackButton";
 
 export default function Frequency() {
   return (
     <View style={styles.container}>
-      <TopRightBackButton />
+      <BackButton />
 
       <Text style={styles.title}>Frequency</Text>
 

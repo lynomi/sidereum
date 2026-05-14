@@ -14,7 +14,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import TopRightBackButton from "../components/TopRightBackButton";
+import BackButton from "../components/TopRightBackButton";
 
 const TIMER_MINUTES = {
   min: 1,
@@ -59,6 +59,7 @@ export default function Sleep() {
   const [isRunning, setIsRunning] = useState(false);
   const [isEditingDuration, setIsEditingDuration] = useState(false);
   const [isScreenDimmed, setIsScreenDimmed] = useState(false);
+  const [isShowingStoppedTime, setIsShowingStoppedTime] = useState(false);
   const [audioError, setAudioError] = useState("");
 
   const configureAudio = useCallback(() => {
@@ -141,6 +142,7 @@ export default function Sleep() {
     restartPlayer();
     setEndTimeMs(null);
     setIsRunning(false);
+    setIsShowingStoppedTime(false);
     setRemainingSeconds(0);
   }, [pausePlayer, releaseKeepAwake, restartPlayer]);
 
@@ -214,6 +216,7 @@ export default function Sleep() {
       setDurationInput(String(clampedMinutes));
       setRemainingSeconds(seconds);
       setEndTimeMs(null);
+      setIsShowingStoppedTime(false);
     },
     [isRunning]
   );
@@ -240,12 +243,18 @@ export default function Sleep() {
 
   const startTimer = async () => {
     setAudioError("");
+    setIsEditingDuration(false);
+    Keyboard.dismiss();
+
     const secondsToRun =
       remainingSeconds > 0 && remainingSeconds < duration
         ? remainingSeconds
         : duration;
 
     setRemainingSeconds(secondsToRun);
+    setIsShowingStoppedTime(false);
+    setEndTimeMs(Date.now() + secondsToRun * 1000);
+    setIsRunning(true);
 
     try {
       await configureAudio();
@@ -255,9 +264,10 @@ export default function Sleep() {
         await player.seekTo(0);
       }
       player.play();
-      setEndTimeMs(Date.now() + secondsToRun * 1000);
-      setIsRunning(true);
     } catch {
+      setEndTimeMs(null);
+      setIsRunning(false);
+      setIsShowingStoppedTime(true);
       setAudioError("The sleep sound could not be started.");
     }
   };
@@ -273,34 +283,50 @@ export default function Sleep() {
     releaseKeepAwake();
     setEndTimeMs(null);
     setIsRunning(false);
+    setIsShowingStoppedTime(true);
     setRemainingSeconds(nextRemainingSeconds);
+  };
+
+  const resetTimer = () => {
+    pausePlayer();
+    player.volume = SLEEP_VOLUME;
+    hideBlackScreen();
+    releaseKeepAwake();
+    setEndTimeMs(null);
+    setIsRunning(false);
+    setIsShowingStoppedTime(false);
+    setRemainingSeconds(duration);
   };
 
   return (
     <View style={styles.container}>
-      <TopRightBackButton />
+      <BackButton opacity={blackScreenOpacity} />
 
       <Text style={styles.title}>Sleep</Text>
 
-      {isRunning ? (
-        <Text style={styles.timer}>{formatTime(remainingSeconds)}</Text>
-      ) : (
-        <View style={styles.timerEditor}>
-          <TextInput
-            accessibilityLabel="Timer minutes"
-            keyboardType="number-pad"
-            maxLength={4}
-            selectTextOnFocus
-            style={styles.timerInput}
-            value={durationInput}
-            onBlur={commitDurationInput}
-            onChangeText={updateDurationInput}
-            onFocus={() => setIsEditingDuration(true)}
-            onSubmitEditing={commitDurationInput}
-          />
-          <Text style={styles.timerUnit}>min</Text>
-        </View>
-      )}
+      <View style={styles.timerSlot}>
+        {isRunning || isShowingStoppedTime ? (
+          <View style={styles.timerReadout}>
+            <Text style={styles.timer}>{formatTime(remainingSeconds)}</Text>
+          </View>
+        ) : (
+          <View style={styles.timerEditor}>
+            <TextInput
+              accessibilityLabel="Timer minutes"
+              keyboardType="number-pad"
+              maxLength={4}
+              selectTextOnFocus
+              style={styles.timerInput}
+              value={durationInput}
+              onBlur={commitDurationInput}
+              onChangeText={updateDurationInput}
+              onFocus={() => setIsEditingDuration(true)}
+              onSubmitEditing={commitDurationInput}
+            />
+            <Text style={styles.timerUnit}>min</Text>
+          </View>
+        )}
+      </View>
 
       {isEditingDuration && !isRunning ? (
         <Pressable style={styles.doneButton} onPress={commitDurationInput}>
@@ -308,27 +334,49 @@ export default function Sleep() {
         </Pressable>
       ) : null}
 
-      <Pressable
-        style={[styles.primaryButton, isRunning && styles.disabledButton]}
-        disabled={isRunning}
-        onPress={startTimer}
-      >
-        <Text style={styles.primaryButtonText}>
-          {isRunning ? "Timer Running" : "Start Timer"}
-        </Text>
-      </Pressable>
-
-      {isRunning ? (
-        <Pressable style={styles.stopButton} onPress={stopTimer}>
-          <Text style={styles.stopButtonText}>Stop</Text>
+      <View style={styles.controlsStack}>
+        <Pressable
+          style={[styles.primaryButton, isRunning && styles.disabledButton]}
+          disabled={isRunning}
+          onPress={startTimer}
+        >
+          <Text style={styles.primaryButtonText}>
+            {isRunning
+              ? "Timer Running"
+              : isShowingStoppedTime
+                ? "Resume"
+                : "Start Timer"}
+          </Text>
         </Pressable>
-      ) : null}
 
-      {isRunning && !isScreenDimmed ? (
-        <Pressable style={styles.dimButton} onPress={showBlackScreen}>
-          <Text style={styles.dimButtonText}>Dim Screen</Text>
-        </Pressable>
-      ) : null}
+        <View style={styles.controlSlot}>
+          {isRunning ? (
+            <Pressable style={styles.stopButton} onPress={stopTimer}>
+              <Text style={styles.stopButtonText}>Stop</Text>
+            </Pressable>
+          ) : null}
+
+          {isShowingStoppedTime ? (
+            <Pressable style={styles.resetButton} onPress={resetTimer}>
+              <Text style={styles.resetButtonText}>Reset</Text>
+            </Pressable>
+          ) : null}
+        </View>
+
+        <View style={styles.controlSlot}>
+          {isRunning ? (
+            <Pressable
+              style={[
+                styles.dimButton,
+                isScreenDimmed && { opacity: 0.3 },
+              ]}
+              onPress={isScreenDimmed ? hideBlackScreen : showBlackScreen}
+            >
+              <Text style={styles.dimButtonText}>Dim</Text>
+            </Pressable>
+          ) : null}
+        </View>
+      </View>
 
       {audioError ? <Text style={styles.errorText}>{audioError}</Text> : null}
       {isScreenDimmed ? (
@@ -368,18 +416,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#cbd5e1",
   },
+  timerSlot: {
+    minHeight: 92,
+    justifyContent: "center",
+  },
   timer: {
-    marginTop: 8,
     fontSize: 56,
     fontWeight: "800",
     color: "#ffffff",
+  },
+  timerReadout: {
+    alignItems: "center",
   },
   timerEditor: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    marginTop: 8,
   },
   timerInput: {
     minWidth: 96,
@@ -409,7 +462,6 @@ const styles = StyleSheet.create({
     color: "#dbeafe",
   },
   primaryButton: {
-    marginTop: 8,
     minWidth: 180,
     alignItems: "center",
     borderRadius: 8,
@@ -421,6 +473,15 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "700",
     color: "#ffffff",
+  },
+  controlsStack: {
+    alignItems: "center",
+    gap: 16,
+    minHeight: 170,
+  },
+  controlSlot: {
+    minHeight: 50,
+    justifyContent: "center",
   },
   stopButton: {
     minWidth: 180,
@@ -434,6 +495,20 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "700",
     color: "#fee2e2",
+  },
+  resetButton: {
+    minWidth: 180,
+    alignItems: "center",
+    borderRadius: 8,
+    borderColor: "#475569",
+    borderWidth: 1,
+    paddingHorizontal: 22,
+    paddingVertical: 14,
+  },
+  resetButtonText: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#dbeafe",
   },
   dimButton: {
     minWidth: 180,

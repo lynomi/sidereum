@@ -5,7 +5,8 @@ export default function RootLayout() {
     <Stack
       screenOptions={{
         animation: "fade",
-        animationDuration: 200,
+        animationDuration: 100,
+        headerShown: false,
       }}
     />
   );
