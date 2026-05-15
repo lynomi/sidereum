@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 export default function Selection() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Selection Page</Text>
+      <Text style={styles.title}>Select a Category</Text>
 
       <View style={styles.buttonGroup}>
         <Pressable style={styles.button} onPress={() => router.push("/rain")}>

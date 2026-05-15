@@ -1,19 +1,19 @@
 import {
-    setAudioModeAsync,
-    useAudioPlayer,
+  setAudioModeAsync,
+  useAudioPlayer,
 } from "expo-audio";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-    Animated,
-    Keyboard,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Animated,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import BackButton from "../components/BackButton";
 
@@ -141,11 +141,12 @@ export default function Sleep() {
     releaseKeepAwake();
     pausePlayer();
     restartPlayer();
+    showBlackScreen();
     setEndTimeMs(null);
     setIsRunning(false);
     setIsShowingStoppedTime(false);
     setRemainingSeconds(0);
-  }, [pausePlayer, releaseKeepAwake, restartPlayer]);
+  }, [pausePlayer, releaseKeepAwake, restartPlayer, showBlackScreen]);
 
   const syncRemainingTime = useCallback(() => {
     if (!endTimeMs) {
